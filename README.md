@@ -140,10 +140,6 @@ The following code shows how we use ambient data to restrict the rule.
 
 We implemented an example of a verification based on a state machine that accepts the room’s name and a serialized token to verify, if the verification succeed the state pass from idle to success and the the room’s door will be opened otherwise the state pass from idle to error and the door will remain closed.
 
-Just a visual reminder of what is a state machine: you have states and transitions between states
-
-![statemachine](./doc/statemachine.png)
-
 The example uses xstate as a library to manage room states.
 
 ```jsx
@@ -171,8 +167,8 @@ stateMachine = Machine({
         invoke: {
           id: "doOpening",
           src: (ctx, event) => Open(event.data),
-      //if the function open() valid the verification the state machine will pass to success state, else it will pass to error state
-   onDone: {
+      //if valid the verification the state machine will pass to success state, else it will pass to error state
+      onDone: {
             target: "success",
             actions: assign({ msg: (ctx, event) => event.data })
           },
@@ -182,7 +178,7 @@ stateMachine = Machine({
           }
         }
       },
-	// error state 
+	  // error state 
       error: {
         on: {
           SUBMIT: {
@@ -191,7 +187,7 @@ stateMachine = Machine({
           }
         }
       },
-	//success state
+	  //success state
       success: {
         type: "final"
       }
@@ -227,7 +223,7 @@ We use webassembly to interact with the rust library.
 			          // verify if alice owns the resource room_name
                 verifier.addFact(wasm.fact(
                                  "owner",
-                                 [{ sym-bol: "ambient" }, { symbol: "alice" }, { string: this.state.room_name }],
+                                 [{ symbol: "ambient" }, { symbol: "alice" }, { string: this.state.room_name }],
 
                 ))
 
@@ -242,17 +238,18 @@ We use webassembly to interact with the rust library.
                           }
                       ]
                 )
-			          //adding the rule to the verifier
-			          // this rule will verify if the token owner has the right to open the resource room_name
+			    
+                //adding the rule to the verifier
+			    // this rule will verify if the token owner has the right to open the resource room_name
                 verifier.addCaveat(rule);
-			          //decoding the root private key
+			    //decoding the root private key
                 let decoded = fromHex(this.state.privateKey);
-			          //creating biscuit root keypair from the root private key
+			    //creating biscuit root keypair from the root private key
                 let k = wasm.KeyPair.fromBytes(decoded);
                 try {
-			                //verifying the token and the root public key 
+			          //verifying the token and the root public key 
                       let result = verifier.verify(k.publicKey(), token);
-			                //if the verification succeed this.state.verification will be set to “OK”
+			          //if the verification succeed this.state.verification will be set to “OK”
                       this.setState({ verification: "OK" });
                       //wait two seconds to retain the modification of the state
                       await new Promise(r => setTimeout(r, 2000));
@@ -261,9 +258,10 @@ We use webassembly to interact with the rust library.
                       this.setState({ verification: "FAILED" });
                     }
                     e.preventDefault();
-			              //the verification result will be sent to the state machine 
+			        //the verification result will be sent to the state machine 
                     send({ type: "SUBMIT", data: { ...this.state } });
-}}>
+			    }
+}>
 ```
 
 The example below is dedicated to the owner of the building that we suppose his name is Alice, it gives the access to all the rooms because we didn’t set any restriction to the verified resource, so the result will be positive.
