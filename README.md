@@ -11,9 +11,9 @@ We illustrate the potential of biscuit tokens on a building access management. W
 ## Install
 We use npm to install the required packages and start the server. Please follow these instructions to launch the server
 
-'npm install'
+`npm install`
 
-'npm start'
+`npm start`
 
 
 
@@ -27,11 +27,11 @@ Delegation is a common mechanism in everyday life, but difficult with most softw
 
 Compared to state-of-the-art techniques, mostly designed with fixed scoped authorizations atop JWT tokens, the project shall provide a dynamic authentication token with the following properties:
 
-- **distributed authorization**: any participant can validate the token only with public information (in contrast with macaroon that need a shared secret / we may also want to support 3rd party caveats),
+- **distributed authorization**: any participant can validate the token only with public information (in contrast with macaroon that need a shared secret),
 - **offline delegation**: a new token can be minted from another one by attenuating its rights, by its holder, without communicating with anyone (a nice property for smaller devices),
 - **capabilities based**: authorization is tied to rights related to the request, instead of relying to an identity that might not make sense to the verifier,
 - **flexible rights managements**: the token uses a logic language to specify attenuation and add caveats on ambient linked data. In contrast to JWT, Biscuit allows situational/ambient control and is therefore dynamic,
-- **small** enough to fit anywhere (thanks to HPACK compression), even on embedded devices,
+- **small** enough (but grows with number of blocks)
 - **seamlessly integrated** to existing open infrastructure
 
 Here we illustrate how we use a Biscuit web token to manage access to a building (our concrete example).
